@@ -10,6 +10,7 @@ let currentUser = null;
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
+    // Mantener sesión si ya existe
     initializeDefaultUser();
     checkAuth();
     initializeAuthForms();
@@ -17,6 +18,14 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeForms();
     updateAllDisplays();
     setDefaultDates();
+    // Sidebar toggle for mobile
+    const toggle = document.getElementById('sidebarToggle');
+    if (toggle) {
+        toggle.addEventListener('click', () => {
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar) sidebar.classList.toggle('open');
+        });
+    }
 });
 
 // Initialize default user
@@ -606,6 +615,7 @@ function updateAllDisplays() {
     updateInvoicesDisplay();
     updateCreditsDisplay();
     updateProductSelect();
+    renderBanksModule();
 }
 
 function updateFinancialDisplay() {
@@ -671,44 +681,117 @@ function updateTransactionsTable() {
 
 function updateCashFlowChart() {
     const canvas = document.getElementById('cashFlowChart');
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    
-    // Clear canvas
+
+    // Clear and paint background
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // Get last 7 days of data
+    ctx.fillStyle = '#0f1e36'; // dark background
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Build last 7 days labels
     const last7Days = [];
     for (let i = 6; i >= 0; i--) {
-        const date = new Date();
-        date.setDate(date.getDate() - i);
-        last7Days.push(date.toISOString().slice(0, 10));
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        last7Days.push(d);
     }
-    
-    const dailyData = last7Days.map(date => {
-        const dayTransactions = data.transactions.filter(t => t.date === date);
-        const income = dayTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
-        const expenses = dayTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
-        return { date, income, expenses, balance: income - expenses };
+
+    const dailyData = last7Days.map(d => {
+        const key = d.toISOString().slice(0, 10);
+        const dayTransactions = data.transactions.filter(t => t.date === key);
+        const income = dayTransactions.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+        const expenses = dayTransactions.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+        return { key, label: d.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' }), income, expenses };
     });
-    
-    // Draw simple bar chart
-    const maxValue = Math.max(...dailyData.map(d => Math.max(d.income, d.expenses)));
-    const barWidth = canvas.width / dailyData.length * 0.8;
-    const barSpacing = canvas.width / dailyData.length;
-    
-    dailyData.forEach((day, index) => {
-        const x = index * barSpacing + barSpacing * 0.1;
-        const incomeHeight = (day.income / maxValue) * (canvas.height - 40);
-        const expenseHeight = (day.expenses / maxValue) * (canvas.height - 40);
-        
-        // Draw income bar
+
+    const maxValue = Math.max(1, ...dailyData.map(d => Math.max(d.income, d.expenses)));
+
+    // Chart area
+    // Extra espacio superior para la leyenda
+    const margin = { top: 48, right: 24, bottom: 42, left: 48 };
+    const w = canvas.width - margin.left - margin.right;
+    const h = canvas.height - margin.top - margin.bottom;
+
+    // Axes
+    ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+    ctx.lineWidth = 1;
+    // y axis
+    ctx.beginPath();
+    ctx.moveTo(margin.left, margin.top);
+    ctx.lineTo(margin.left, margin.top + h);
+    ctx.stroke();
+    // x axis
+    ctx.beginPath();
+    ctx.moveTo(margin.left, margin.top + h);
+    ctx.lineTo(margin.left + w, margin.top + h);
+    ctx.stroke();
+
+    // Grid and y labels (5 ticks)
+    ctx.fillStyle = 'rgba(255,255,255,0.8)';
+    ctx.font = '10px sans-serif';
+    const ticks = 5;
+    for (let i = 0; i <= ticks; i++) {
+        const value = (maxValue / ticks) * i;
+        const y = margin.top + h - (value / maxValue) * h;
+        ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+        ctx.beginPath();
+        ctx.moveTo(margin.left, y);
+        ctx.lineTo(margin.left + w, y);
+        ctx.stroke();
+        ctx.fillStyle = 'rgba(255,255,255,0.7)';
+        ctx.fillText(`$${Math.round(value).toLocaleString()}`, 4, y + 3);
+    }
+
+    // Bars
+    const groupWidth = w / dailyData.length;
+    const barWidth = groupWidth * 0.32; // two bars per group + spacing
+    dailyData.forEach((d, i) => {
+        const x0 = margin.left + i * groupWidth + groupWidth * 0.18;
+        const incomeH = (d.income / maxValue) * h;
+        const expenseH = (d.expenses / maxValue) * h;
+
+        // income bar (green)
         ctx.fillStyle = '#27ae60';
-        ctx.fillRect(x, canvas.height - 20 - incomeHeight, barWidth * 0.4, incomeHeight);
-        
-        // Draw expense bar
+        ctx.fillRect(x0, margin.top + h - incomeH, barWidth, incomeH);
+
+        // expense bar (red)
         ctx.fillStyle = '#e74c3c';
-        ctx.fillRect(x + barWidth * 0.5, canvas.height - 20 - expenseHeight, barWidth * 0.4, expenseHeight);
+        ctx.fillRect(x0 + barWidth + 6, margin.top + h - expenseH, barWidth, expenseH);
+
+        // x label
+        ctx.fillStyle = 'rgba(255,255,255,0.8)';
+        ctx.save();
+        ctx.translate(x0 + barWidth, margin.top + h + 12);
+        ctx.rotate(-Math.PI * 0.2);
+        ctx.fillText(d.label, 0, 0);
+        ctx.restore();
     });
+
+    // Legend (centrada, con fondo)
+    const legendWidth = 180;
+    const legendHeight = 18;
+    const legendX = margin.left + (w - legendWidth) / 2;
+    const legendY = margin.top - legendHeight - 12; // por encima del área del gráfico
+
+    // fondo
+    ctx.fillStyle = 'rgba(255,255,255,0.12)';
+    ctx.fillRect(legendX, legendY, legendWidth, legendHeight);
+    ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+    ctx.strokeRect(legendX, legendY, legendWidth, legendHeight);
+
+    // items
+    let lx = legendX + 10;
+    let ly = legendY + 5;
+    ctx.fillStyle = '#27ae60';
+    ctx.fillRect(lx, ly, 10, 10);
+    ctx.fillStyle = 'rgba(255,255,255,0.9)';
+    ctx.fillText('Ingresos', lx + 15, ly + 9);
+    lx += 90;
+    ctx.fillStyle = '#e74c3c';
+    ctx.fillRect(lx, ly, 10, 10);
+    ctx.fillStyle = 'rgba(255,255,255,0.9)';
+    ctx.fillText('Gastos', lx + 15, ly + 9);
 }
 
 function updateInventoryDisplay() {
@@ -869,6 +952,74 @@ function updateCreditsDisplay() {
     document.getElementById('financial-score').textContent = score;
     document.getElementById('positive-flow').textContent = balance > 0 ? 'Sí' : 'No';
     document.getElementById('payments-current').textContent = 'Sí'; // Simplified
+}
+
+// ---------- Banks Associated Module ----------
+function getBanksData() {
+    return [
+        { id: 1, name: 'Banco Andino', logo: '', services: ['Créditos PYME', 'Cuentas empresariales'], requirements: ['CI vigente', 'Antigüedad 6 meses'], minScore: 40 },
+        { id: 2, name: 'FinanciaMax', logo: '', services: ['Líneas de crédito', 'Leasing'], requirements: ['Flujo positivo', 'Estados de cuenta'], minScore: 60 },
+        { id: 3, name: 'Cooperativa Sol', logo: '', services: ['Microcréditos', 'Ahorro'], requirements: ['Garantía personal'], minScore: 30 },
+        { id: 4, name: 'Banco ProActivo', logo: '', services: ['Crédito capital de trabajo'], requirements: ['Ventas mensuales > $1000'], minScore: 70 }
+    ];
+}
+
+function computeUserScore() {
+    const currentMonth = new Date().toISOString().slice(0, 7);
+    const monthlyTransactions = data.transactions.filter(t => t.date.startsWith(currentMonth));
+    const income = monthlyTransactions.filter(t => t.type === 'income').reduce((s,t)=>s+t.amount,0);
+    const expenses = monthlyTransactions.filter(t => t.type === 'expense').reduce((s,t)=>s+t.amount,0);
+    const balance = income - expenses;
+
+    let score = 50;
+    if (balance > 0) score += 25;
+    if (income > 0) score += Math.min(15, Math.floor(income/500));
+    if (data.transactions.length > 10) score += 10;
+    score = Math.max(0, Math.min(100, score));
+    return { score, income, expenses, balance };
+}
+
+function renderBanksModule() {
+    const banksBody = document.getElementById('banksBody');
+    const scoreEl = document.getElementById('bank-financial-score');
+    const progressEl = document.getElementById('bank-score-progress');
+    const recs = document.getElementById('bank-recommendations');
+    if (!banksBody || !scoreEl || !progressEl || !recs) return;
+
+    const { score } = computeUserScore();
+    scoreEl.textContent = score;
+    progressEl.style.width = `${score}%`;
+
+    const banks = getBanksData();
+    banksBody.innerHTML = '';
+    banks.forEach(b => {
+        const tr = document.createElement('tr');
+        const recommended = score >= b.minScore;
+        tr.innerHTML = `
+            <td>${b.logo ? `<img src="${b.logo}" alt="${b.name}">` : '<i class="fas fa-university"></i>'}</td>
+            <td>${b.name}</td>
+            <td>${b.services.join(', ')}</td>
+            <td>${b.requirements.join(', ')}</td>
+            <td>${recommended ? '<span class="badge positive">Sí</span>' : '<span class="badge negative">No</span>'}</td>
+        `;
+        banksBody.appendChild(tr);
+    });
+
+    // Recommendations
+    recs.innerHTML = '';
+    const good = banks.filter(b => score >= b.minScore).map(b=>b.name);
+    const need = banks.filter(b => score < b.minScore).map(b=>b.name);
+    const blocks = [];
+    blocks.push(`<div class="alert ${good.length? 'positive':'info'}"><i class="fas fa-check-circle"></i> Bancos recomendados: ${good.length? good.join(', '): 'Aún ninguno'}</div>`);
+    blocks.push(`<div class="alert ${need.length? 'warning':'info'}"><i class="fas fa-lightbulb"></i> Pendientes: ${need.length? need.join(', '): 'Estás listo para aplicar'}</div>`);
+
+    // improvement tips
+    const tips = [];
+    if (score < 41) tips.push('Registra más ventas e ingresos este mes.');
+    if (score >= 41 && score < 71) tips.push('Mantén flujo positivo 2-3 meses.');
+    if (tips.length === 0) tips.push('Mantén tu balance positivo para mejores tasas.');
+    blocks.push(`<div class="alert info"><i class="fas fa-info-circle"></i> Sugerencias: ${tips.join(' ')}</div>`);
+    recs.innerHTML = blocks.join('');
 }
 
 function updateProductSelect() {
@@ -1171,3 +1322,130 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+// --- Score Financiero module (append-only integration) ---
+(function initScoreModule() {
+    const COMPANIES_KEY = 'bcpCompanies';
+
+    function getDefaultCompanies() {
+        return [
+            { id: 1, name: 'Empresa Aurora', info: 'Retail y abarrotes', phone: '+591 700-11111', baseTotal: 12000 },
+            { id: 2, name: 'TecnoAndes', info: 'Electrónica y accesorios', phone: '+591 700-22222', baseTotal: 18500 },
+            { id: 3, name: 'Panadería El Trigal', info: 'Alimentos y panificación', phone: '+591 700-33333', baseTotal: 9200 },
+            { id: 4, name: 'AgroCampo', info: 'Agroinsumos', phone: '+591 700-44444', baseTotal: 7400 },
+            { id: 5, name: 'CasaTextil', info: 'Ropa y hogar', phone: '+591 700-55555', baseTotal: 13100 }
+        ];
+    }
+
+    function loadCompanies() {
+        try {
+            const raw = localStorage.getItem(COMPANIES_KEY);
+            if (raw) return JSON.parse(raw);
+        } catch(_){}
+        const defaults = getDefaultCompanies();
+        localStorage.setItem(COMPANIES_KEY, JSON.stringify(defaults));
+        return defaults;
+    }
+
+    function saveCompanies(companies) {
+        localStorage.setItem(COMPANIES_KEY, JSON.stringify(companies));
+    }
+
+    function computeCompanyAggregates() {
+        const companies = loadCompanies();
+        const byName = {};
+        companies.forEach(c => {
+            byName[c.name] = {
+                name: c.name,
+                info: c.info,
+                phone: c.phone,
+                baseTotal: c.baseTotal || 0,
+                monthlySales: 0,
+                totalSales: (c.baseTotal || 0)
+            };
+        });
+
+        // add current user's business to the list
+        if (window.currentUser && currentUser.business) {
+            if (!byName[currentUser.business]) {
+                byName[currentUser.business] = {
+                    name: currentUser.business,
+                    info: 'Negocio',
+                    phone: '',
+                    baseTotal: 0,
+                    monthlySales: 0,
+                    totalSales: 0
+                };
+            }
+        }
+
+        const currentMonth = new Date().toISOString().slice(0,7);
+        // use global data if present to aggregate sales
+        if (window.data && Array.isArray(data.sales)) {
+            data.sales.forEach(s => {
+                const name = (currentUser && currentUser.business) ? currentUser.business : 'Mi Negocio';
+                if (!byName[name]) {
+                    byName[name] = { name, info: 'Negocio', phone: '', baseTotal: 0, monthlySales: 0, totalSales: 0 };
+                }
+                byName[name].totalSales += s.total;
+                if (s.date && s.date.startsWith(currentMonth)) byName[name].monthlySales += s.total;
+            });
+        }
+        return Object.values(byName);
+    }
+
+    function renderLeaderItem(company, label) {
+        const payload = encodeURIComponent(JSON.stringify(company));
+        return `
+            <div class="leader-item" data-company="${payload}">
+                <div class="leader-name">${company.name}</div>
+                <div class="leader-metrics"><span>${label}: $${(company[label]||0).toLocaleString()}</span></div>
+            </div>
+        `;
+    }
+
+    function showCompanyDetail(company) {
+        const detail = document.getElementById('company-detail');
+        if (!detail) return;
+        detail.innerHTML = `
+            <h4>${company.name}</h4>
+            <p><strong>Información:</strong> ${company.info || '—'}</p>
+            <p><strong>Ventas del mes:</strong> $${(company.monthlySales||0).toLocaleString()}</p>
+            <p><strong>Ventas totales:</strong> $${(company.totalSales||0).toLocaleString()}</p>
+            <p><strong>Contacto:</strong> ${company.phone || 'No registrado'}</p>
+        `;
+    }
+
+    function wireClicks(container) {
+        container.querySelectorAll('.leader-item').forEach(el => {
+            el.addEventListener('click', () => {
+                try {
+                    const obj = JSON.parse(decodeURIComponent(el.dataset.company));
+                    showCompanyDetail(obj);
+                } catch(_){}
+            });
+        });
+    }
+
+    function updateScoreModule() {
+        const monthlyContainer = document.getElementById('score-monthly');
+        const alltimeContainer = document.getElementById('score-alltime');
+        if (!monthlyContainer || !alltimeContainer) return;
+
+        const companies = computeCompanyAggregates();
+        const topMonthly = [...companies].sort((a,b)=> (b.monthlySales||0) - (a.monthlySales||0)).slice(0,5);
+        const topAll = [...companies].sort((a,b)=> (b.totalSales||0) - (a.totalSales||0)).slice(0,5);
+
+        monthlyContainer.innerHTML = topMonthly.map(c => renderLeaderItem(c, 'monthlySales')).join('');
+        alltimeContainer.innerHTML = topAll.map(c => renderLeaderItem(c, 'totalSales')).join('');
+
+        wireClicks(monthlyContainer);
+        wireClicks(alltimeContainer);
+    }
+
+    // Expose for other parts if needed
+    window.updateScoreModule = updateScoreModule;
+
+    // Periodically refresh when data changes (simple integration without invasive edits)
+    setInterval(updateScoreModule, 1500);
+})();

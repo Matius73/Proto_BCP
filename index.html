@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BCP Financial Manager</title>
+    <title>SmartCash Cloud Manager</title>
+    <link rel="icon" href="imagen/Logo2.png">
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
@@ -13,38 +14,8 @@
         <div class="auth-container">
             <div class="auth-header">
                 <div class="logo">
-                    <div class="logo-icon">
-                        <div class="logo-rectangle">
-                            <div class="logo-cloud"></div>
-                            <div class="logo-circles">
-                                <div class="circle circle-left-top"></div>
-                                <div class="circle circle-left-center"></div>
-                                <div class="circle circle-right-top"></div>
-                                <div class="circle circle-right-center"></div>
-                            </div>
-                        </div>
-                        <div class="circuit-lines">
-                            <div class="line line-top-left-1"></div>
-                            <div class="line line-top-left-2"></div>
-                            <div class="line line-top-right-1"></div>
-                            <div class="line line-top-right-2"></div>
-                            <div class="line line-bottom-left-1"></div>
-                            <div class="line line-bottom-left-2"></div>
-                            <div class="line line-bottom-right-1"></div>
-                            <div class="line line-bottom-right-2"></div>
-                        </div>
-                        <div class="circuit-nodes">
-                            <div class="node node-top-left-1"></div>
-                            <div class="node node-top-left-2"></div>
-                            <div class="node node-top-right-1"></div>
-                            <div class="node node-top-right-2"></div>
-                            <div class="node node-bottom-left-1"></div>
-                            <div class="node node-bottom-left-2"></div>
-                            <div class="node node-bottom-right-1"></div>
-                            <div class="node node-bottom-right-2"></div>
-                        </div>
-                    </div>
-                    <h1>BCP Financial Manager</h1>
+                    <img src="imagen/Logo2.png" alt="SmartCash logo" class="logo-img">
+                    <h1>SmartCash Cloud Manager</h1>
                 </div>
                 <p class="auth-subtitle">Gestión financiera inteligente para tu negocio</p>
             </div>
@@ -108,6 +79,51 @@
         <!-- Main Application -->
     <div id="mainApp" class="main-app" style="display: none;">
         <div class="container">
+        <div class="app-layout">
+            <aside class="sidebar">
+                <div class="sidebar-brand">
+                    <div class="logo">
+                        <img src="imagen/Logo2.png" alt="SmartCash logo" class="logo-img">
+                        <h1>SmartCash</h1>
+                    </div>
+                </div>
+                <!-- Navigation -->
+                <nav class="nav">
+                    <button class="nav-btn active" data-module="dashboard">
+                        <i class="fas fa-home"></i>
+                        Dashboard
+                    </button>
+                    <button class="nav-btn" data-module="finanzas">
+                        <i class="fas fa-chart-line"></i>
+                        Finanzas
+                    </button>
+                    <button class="nav-btn" data-module="inventarios">
+                        <i class="fas fa-boxes"></i>
+                        Inventarios
+                    </button>
+                    <button class="nav-btn" data-module="score">
+                        <i class="fas fa-trophy"></i>
+                        Score Financiero
+                    </button>
+                    <button class="nav-btn" data-module="facturacion">
+                        <i class="fas fa-file-invoice"></i>
+                        Facturación
+                    </button>
+                    <button class="nav-btn" data-module="creditos">
+                        <i class="fas fa-credit-card"></i>
+                        Créditos
+                    </button>
+                    <button class="nav-btn" data-module="bancos">
+                        <i class="fas fa-university"></i>
+                        Bancos asociados
+                    </button>
+                    <button class="nav-btn" data-module="capacitacion">
+                        <i class="fas fa-graduation-cap"></i>
+                        Capacitación
+                    </button>
+                </nav>
+            </aside>
+            <div class="content-area">
         <!-- Header -->
         <header class="header">
             <div class="logo">
@@ -142,8 +158,11 @@
                         <div class="node node-bottom-right-2"></div>
                     </div>
                 </div>
-                <h1>BCP Financial Manager</h1>
+                <h1>SmartCash Cloud Manager</h1>
             </div>
+            <button class="sidebar-toggle" id="sidebarToggle" aria-label="Abrir menú">
+                <i class="fas fa-bars"></i>
+            </button>
             <div class="user-info">
                 <div class="offline-indicator">
                     <i class="fas fa-wifi"></i>
@@ -212,7 +231,7 @@
             </div>
 
             <div class="value-proposition">
-                <h3>🚀 ¿Por qué elegir BCP Financial Manager?</h3>
+                <h3>🚀 ¿Por qué elegir SmartCash Cloud Manager?</h3>
                 <div class="value-grid">
                     <div class="value-item">
                         <i class="fas fa-mobile-alt"></i>
@@ -271,36 +290,89 @@
             </div>
         </div>
 
-        <!-- Navigation -->
-        <nav class="nav">
-            <button class="nav-btn active" data-module="dashboard">
-                <i class="fas fa-home"></i>
-                Dashboard
-            </button>
-            <button class="nav-btn" data-module="finanzas">
-                <i class="fas fa-chart-line"></i>
-                Finanzas
-            </button>
-            <button class="nav-btn" data-module="inventarios">
-                <i class="fas fa-boxes"></i>
-                Inventarios
-            </button>
-            <button class="nav-btn" data-module="facturacion">
-                <i class="fas fa-file-invoice"></i>
-                Facturación
-            </button>
-            <button class="nav-btn" data-module="creditos">
-                <i class="fas fa-credit-card"></i>
-                Créditos
-            </button>
-            <button class="nav-btn" data-module="capacitacion">
-                <i class="fas fa-graduation-cap"></i>
-                Capacitación
-            </button>
-        </nav>
-
         <!-- Main Content -->
         <main class="main-content">
+            <!-- Bancos Asociados Module -->
+            <div id="bancos" class="module">
+                <div class="module-header">
+                    <h2>Bancos asociados</h2>
+                    <p>Alianzas financieras y elegibilidad según tu puntaje</p>
+                </div>
+
+                <div class="card">
+                    <h3>Tu puntaje financiero</h3>
+                    <div class="score-display">
+                        <div class="score-circle" id="bank-score-circle">
+                            <span id="bank-financial-score">0</span>
+                        </div>
+                        <p>Puntaje financiero actual</p>
+                        <div class="progress-wrapper">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="bank-score-progress" style="width: 0%"></div>
+                            </div>
+                            <div class="progress-scale">
+                                <span>Bajo</span><span>Medio</span><span>Alto</span>
+                            </div>
+                        </div>
+                        <div class="score-legend">
+                            <span>0–40: difícil obtener crédito</span>
+                            <span>41–70: elegible para bancos medianos</span>
+                            <span>71–100: alta probabilidad de préstamo</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Bancos en alianza</h3>
+                    <table id="banksTable">
+                        <thead>
+                            <tr>
+                                <th>Logo</th>
+                                <th>Banco</th>
+                                <th>Servicios</th>
+                                <th>Requisitos básicos</th>
+                                <th>Recomendado para ti</th>
+                            </tr>
+                        </thead>
+                        <tbody id="banksBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3>Recomendaciones</h3>
+                    <div id="bank-recommendations" class="alerts"></div>
+                </div>
+            </div>
+            <!-- Score Financiero Module -->
+            <div id="score" class="module">
+                <div class="module-header">
+                    <h2>Score Financiero - Empresas Destacadas</h2>
+                    <p>Ranking por ventas del mes y ventas totales</p>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <h3>Top 5 del Mes</h3>
+                        <div id="score-monthly" class="leaderboard">
+                            <!-- filled by script.js -->
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Top 5 Histórico</h3>
+                        <div id="score-alltime" class="leaderboard">
+                            <!-- filled by script.js -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Detalle de Empresa</h3>
+                    <div id="company-detail" class="company-detail">
+                        <p>Selecciona una empresa del ranking para ver información, estadísticas y contacto.</p>
+                    </div>
+                </div>
+            </div>
             <!-- Finanzas Module -->
             <div id="finanzas" class="module">
                 <div class="module-header">
@@ -643,6 +715,8 @@
                 </div>
             </div>
         </main>
+            </div>
+        </div>
         </div>
     </div>
 
