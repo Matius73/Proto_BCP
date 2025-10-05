@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCP Financial Manager</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Login/Register Page -->
+    <div id="authPage" class="auth-page">
+        <div class="auth-container">
+            <div class="auth-header">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <div class="logo-rectangle">
+                            <div class="logo-cloud"></div>
+                            <div class="logo-circles">
+                                <div class="circle circle-left-top"></div>
+                                <div class="circle circle-left-center"></div>
+                                <div class="circle circle-right-top"></div>
+                                <div class="circle circle-right-center"></div>
+                            </div>
+                        </div>
+                        <div class="circuit-lines">
+                            <div class="line line-top-left-1"></div>
+                            <div class="line line-top-left-2"></div>
+                            <div class="line line-top-right-1"></div>
+                            <div class="line line-top-right-2"></div>
+                            <div class="line line-bottom-left-1"></div>
+                            <div class="line line-bottom-left-2"></div>
+                            <div class="line line-bottom-right-1"></div>
+                            <div class="line line-bottom-right-2"></div>
+                        </div>
+                        <div class="circuit-nodes">
+                            <div class="node node-top-left-1"></div>
+                            <div class="node node-top-left-2"></div>
+                            <div class="node node-top-right-1"></div>
+                            <div class="node node-top-right-2"></div>
+                            <div class="node node-bottom-left-1"></div>
+                            <div class="node node-bottom-left-2"></div>
+                            <div class="node node-bottom-right-1"></div>
+                            <div class="node node-bottom-right-2"></div>
+                        </div>
+                    </div>
+                    <h1>BCP Financial Manager</h1>
+                </div>
+                <p class="auth-subtitle">Gestión financiera inteligente para tu negocio</p>
+            </div>
+
+            <div class="auth-forms">
+                <!-- Login Form -->
+                <div id="loginForm" class="auth-form active">
+                    <h2>Iniciar Sesión</h2>
+                    <form id="loginFormElement">
+                        <div class="form-group">
+                            <label for="loginEmail">Correo electrónico:</label>
+                            <input type="email" id="loginEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Contraseña:</label>
+                            <input type="password" id="loginPassword" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full">Iniciar Sesión</button>
+                    </form>
+                    <p class="auth-switch">
+                        ¿No tienes cuenta? 
+                        <a href="#" onclick="switchAuth('register')">Regístrate aquí</a>
+                    </p>
+                </div>
+
+                <!-- Register Form -->
+                <div id="registerForm" class="auth-form">
+                    <h2>Crear Cuenta</h2>
+                    <form id="registerFormElement">
+                        <div class="form-group">
+                            <label for="registerName">Nombre completo:</label>
+                            <input type="text" id="registerName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerEmail">Correo electrónico:</label>
+                            <input type="email" id="registerEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPassword">Contraseña:</label>
+                            <input type="password" id="registerPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerConfirmPassword">Confirmar contraseña:</label>
+                            <input type="password" id="registerConfirmPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerBusiness">Nombre del negocio:</label>
+                            <input type="text" id="registerBusiness" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full">Crear Cuenta</button>
+                    </form>
+                    <p class="auth-switch">
+                        ¿Ya tienes cuenta? 
+                        <a href="#" onclick="switchAuth('login')">Inicia sesión aquí</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- Main Application -->
+    <div id="mainApp" class="main-app" style="display: none;">
+        <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <div class="logo-rectangle">
+                        <div class="logo-cloud"></div>
+                        <div class="logo-circles">
+                            <div class="circle circle-left-top"></div>
+                            <div class="circle circle-left-center"></div>
+                            <div class="circle circle-right-top"></div>
+                            <div class="circle circle-right-center"></div>
+                        </div>
+                    </div>
+                    <div class="circuit-lines">
+                        <div class="line line-top-left-1"></div>
+                        <div class="line line-top-left-2"></div>
+                        <div class="line line-top-right-1"></div>
+                        <div class="line line-top-right-2"></div>
+                        <div class="line line-bottom-left-1"></div>
+                        <div class="line line-bottom-left-2"></div>
+                        <div class="line line-bottom-right-1"></div>
+                        <div class="line line-bottom-right-2"></div>
+                    </div>
+                    <div class="circuit-nodes">
+                        <div class="node node-top-left-1"></div>
+                        <div class="node node-top-left-2"></div>
+                        <div class="node node-top-right-1"></div>
+                        <div class="node node-top-right-2"></div>
+                        <div class="node node-bottom-left-1"></div>
+                        <div class="node node-bottom-left-2"></div>
+                        <div class="node node-bottom-right-1"></div>
+                        <div class="node node-bottom-right-2"></div>
+                    </div>
+                </div>
+                <h1>BCP Financial Manager</h1>
+            </div>
+            <div class="user-info">
+                <div class="offline-indicator">
+                    <i class="fas fa-wifi"></i>
+                    <span>Modo Offline</span>
+                </div>
+                <span id="userName" class="user-name">Usuario</span>
+                <button class="btn btn-secondary" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Cerrar Sesión
+                </button>
+            </div>
+        </header>
+
+        <!-- Dashboard Central -->
+        <div id="dashboard" class="module active">
+            <div class="module-header">
+                <h2>¡Bienvenido a tu Centro de Control Financiero!</h2>
+                <p>Gestiona tu negocio de forma inteligente y profesional</p>
+            </div>
+            
+            <div class="pain-points-intro">
+                <h3>¿Te identificas con alguno de estos problemas?</h3>
+                <p>Nosotros te ayudamos a solucionarlos</p>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="pain-point-card" data-module="finanzas">
+                    <div class="pain-icon">💸</div>
+                    <h3>No sé cuánto dinero entra y sale</h3>
+                    <p>Gastos personales mezclados con el negocio, dificultad para planificar compras o inversiones</p>
+                    <div class="solution-preview">
+                        <strong>Nuestra solución:</strong> Registro simple de ingresos/egresos + reportes automáticos
+                    </div>
+                    <button class="btn btn-primary">Ver Finanzas</button>
+                </div>
+
+                <div class="pain-point-card" data-module="inventarios">
+                    <div class="pain-icon">📦</div>
+                    <h3>Productos agotados o acumulados</h3>
+                    <p>Pérdidas por caducidad, no sé qué productos venden más, inventario descontrolado</p>
+                    <div class="solution-preview">
+                        <strong>Nuestra solución:</strong> Control automático de stock + alertas inteligentes
+                    </div>
+                    <button class="btn btn-primary">Ver Inventarios</button>
+                </div>
+
+                <div class="pain-point-card" data-module="facturacion">
+                    <div class="pain-icon">🧾</div>
+                    <h3>Trámites engorrosos para facturar</h3>
+                    <p>Riesgo de perder clientes grandes, falta de organización de comprobantes</p>
+                    <div class="solution-preview">
+                        <strong>Nuestra solución:</strong> Facturas simples en PDF + organización automática
+                    </div>
+                    <button class="btn btn-primary">Ver Facturación</button>
+                </div>
+
+                <div class="pain-point-card" data-module="capacitacion">
+                    <div class="pain-icon">🎓</div>
+                    <h3>No sé usar herramientas digitales</h3>
+                    <p>Falta de educación financiera, no entiendo conceptos contables básicos</p>
+                    <div class="solution-preview">
+                        <strong>Nuestra solución:</strong> Tutoriales paso a paso + capacitación personalizada
+                    </div>
+                    <button class="btn btn-primary">Ver Capacitación</button>
+                </div>
+            </div>
+
+            <div class="value-proposition">
+                <h3>🚀 ¿Por qué elegir BCP Financial Manager?</h3>
+                <div class="value-grid">
+                    <div class="value-item">
+                        <i class="fas fa-mobile-alt"></i>
+                        <h4>Funciona sin Internet</h4>
+                        <p>Modo offline para que trabajes desde cualquier lugar</p>
+                    </div>
+                    <div class="value-item">
+                        <i class="fas fa-chart-line"></i>
+                        <h4>Score Financiero</h4>
+                        <p>Prepárate para créditos bancarios con tu perfil crediticio</p>
+                    </div>
+                    <div class="value-item">
+                        <i class="fas fa-graduation-cap"></i>
+                        <h4>Capacitación Incluida</h4>
+                        <p>Aprende mientras gestionas tu negocio</p>
+                    </div>
+                    <div class="value-item">
+                        <i class="fas fa-rocket"></i>
+                        <h4>Integración Futura</h4>
+                        <p>Próximamente: crédito express con bancos</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="freemium-section">
+                <h3>💎 Planes Disponibles</h3>
+                <div class="plans-grid">
+                    <div class="plan-card free">
+                        <div class="plan-header">
+                            <h4>Gratis</h4>
+                            <div class="plan-price">$0<span>/mes</span></div>
+                        </div>
+                        <div class="plan-features">
+                            <div class="feature">✅ Hasta 50 productos</div>
+                            <div class="feature">✅ Reportes básicos</div>
+                            <div class="feature">✅ Score financiero</div>
+                            <div class="feature">✅ Modo offline</div>
+                        </div>
+                        <button class="btn btn-secondary">Plan Actual</button>
+                    </div>
+                    <div class="plan-card premium">
+                        <div class="plan-badge">Recomendado</div>
+                        <div class="plan-header">
+                            <h4>Premium</h4>
+                            <div class="plan-price">$9.99<span>/mes</span></div>
+                        </div>
+                        <div class="plan-features">
+                            <div class="feature">✅ Productos ilimitados</div>
+                            <div class="feature">✅ Reportes avanzados</div>
+                            <div class="feature">✅ Integración bancaria</div>
+                            <div class="feature">✅ Soporte prioritario</div>
+                        </div>
+                        <button class="btn btn-primary">Actualizar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="nav">
+            <button class="nav-btn active" data-module="dashboard">
+                <i class="fas fa-home"></i>
+                Dashboard
+            </button>
+            <button class="nav-btn" data-module="finanzas">
+                <i class="fas fa-chart-line"></i>
+                Finanzas
+            </button>
+            <button class="nav-btn" data-module="inventarios">
+                <i class="fas fa-boxes"></i>
+                Inventarios
+            </button>
+            <button class="nav-btn" data-module="facturacion">
+                <i class="fas fa-file-invoice"></i>
+                Facturación
+            </button>
+            <button class="nav-btn" data-module="creditos">
+                <i class="fas fa-credit-card"></i>
+                Créditos
+            </button>
+            <button class="nav-btn" data-module="capacitacion">
+                <i class="fas fa-graduation-cap"></i>
+                Capacitación
+            </button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Finanzas Module -->
+            <div id="finanzas" class="module">
+                <div class="module-header">
+                    <h2>Finanzas</h2>
+                    <p>Gestión de flujo de caja e ingresos/egresos</p>
+                </div>
+                
+                <div class="dashboard-grid">
+                <div class="card">
+                    <h3>Resumen Financiero</h3>
+                    <div class="financial-summary">
+                        <div class="summary-item">
+                            <span class="label">Ingresos del mes:</span>
+                            <span class="value positive" id="monthly-income">$0</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="label">Gastos del mes:</span>
+                            <span class="value negative" id="monthly-expenses">$0</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="label">Balance:</span>
+                            <span class="value" id="balance">$0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Score Financiero</h3>
+                    <div class="score-display">
+                        <div class="score-circle">
+                            <span id="financial-score">75</span>
+                        </div>
+                        <p>Puntuación financiera</p>
+                        <div class="score-details">
+                            <div class="score-item">
+                                <span class="label">Flujo positivo:</span>
+                                <span class="value positive" id="positive-flow">Sí</span>
+                            </div>
+                            <div class="score-item">
+                                <span class="label">Transacciones regulares:</span>
+                                <span class="value positive" id="regular-transactions">Sí</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                    <div class="card">
+                        <h3>Gráfico de Flujo</h3>
+                        <canvas id="cashFlowChart" width="300" height="200"></canvas>
+                    </div>
+
+                    <div class="card">
+                        <h3>Alertas</h3>
+                        <div id="financial-alerts" class="alerts">
+                            <div class="alert positive">
+                                <i class="fas fa-check-circle"></i>
+                                Flujo de caja positivo
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn btn-primary" onclick="openModal('incomeModal')">
+                        <i class="fas fa-plus"></i>
+                        Registrar Ingreso
+                    </button>
+                    <button class="btn btn-secondary" onclick="openModal('expenseModal')">
+                        <i class="fas fa-minus"></i>
+                        Registrar Gasto
+                    </button>
+                </div>
+
+                <div class="transactions-table">
+                    <h3>Transacciones Recientes</h3>
+                    <table id="transactionsTable">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Descripción</th>
+                                <th>Tipo</th>
+                                <th>Monto</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionsBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Inventarios Module -->
+            <div id="inventarios" class="module">
+                <div class="module-header">
+                    <h2>Inventarios y Ventas</h2>
+                    <p>Gestión de productos y control de stock</p>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <h3>Productos en Stock</h3>
+                        <div class="inventory-summary">
+                            <div class="summary-item">
+                                <span class="label">Total productos:</span>
+                                <span class="value" id="total-products">0</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="label">Productos críticos:</span>
+                                <span class="value critical" id="critical-products">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Productos Más Vendidos</h3>
+                        <div id="top-products" class="top-products">
+                            <p>No hay datos de ventas</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Alertas de Stock</h3>
+                        <div id="inventory-alerts" class="alerts">
+                            <div class="alert info">
+                                <i class="fas fa-info-circle"></i>
+                                No hay alertas de stock
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn btn-primary" onclick="openModal('productModal')">
+                        <i class="fas fa-plus"></i>
+                        Nuevo Producto
+                    </button>
+                    <button class="btn btn-secondary" onclick="openModal('saleModal')">
+                        <i class="fas fa-shopping-cart"></i>
+                        Registrar Venta
+                    </button>
+                </div>
+
+                <div class="inventory-table">
+                    <h3>Inventario</h3>
+                    <table id="inventoryTable">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Stock</th>
+                                <th>Precio Compra</th>
+                                <th>Precio Venta</th>
+                                <th>Margen</th>
+                                <th>Última Venta</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventoryBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Facturación Module -->
+            <div id="facturacion" class="module">
+                <div class="module-header">
+                    <h2>Facturación y Cumplimiento</h2>
+                    <p>Gestión de facturas y obligaciones tributarias</p>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <h3>Facturas del Mes</h3>
+                        <div class="invoice-summary">
+                            <div class="summary-item">
+                                <span class="label">Facturas emitidas:</span>
+                                <span class="value" id="invoices-issued">0</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="label">Total facturado:</span>
+                                <span class="value" id="total-invoiced">$0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Recordatorios</h3>
+                        <div id="tax-reminders" class="alerts">
+                            <div class="alert warning">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                Próximo vencimiento: IVA mensual
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn btn-primary" onclick="openModal('invoiceModal')">
+                        <i class="fas fa-file-invoice"></i>
+                        Generar Factura PDF
+                    </button>
+                </div>
+
+                <div class="invoices-table">
+                    <h3>Facturas Recientes</h3>
+                    <table id="invoicesTable">
+                        <thead>
+                            <tr>
+                                <th>Número</th>
+                                <th>Cliente</th>
+                                <th>Fecha</th>
+                                <th>Monto</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoicesBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Créditos Module -->
+            <div id="creditos" class="module">
+                <div class="module-header">
+                    <h2>Acceso a Créditos y Reportes</h2>
+                    <p>Análisis financiero para acceso a créditos</p>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <h3>Score Financiero</h3>
+                        <div class="score-display">
+                            <div class="score-circle">
+                                <span id="financial-score">75</span>
+                            </div>
+                            <p>Puntuación financiera</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Indicadores Clave</h3>
+                        <div class="indicators">
+                            <div class="indicator">
+                                <span class="label">Flujo positivo:</span>
+                                <span class="value positive" id="positive-flow">Sí</span>
+                            </div>
+                            <div class="indicator">
+                                <span class="label">Pagos al día:</span>
+                                <span class="value positive" id="payments-current">Sí</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn btn-primary" onclick="generateBankReport()">
+                        <i class="fas fa-download"></i>
+                        Exportar Reporte para Banco
+                    </button>
+                </div>
+
+                <div class="reports-section">
+                    <h3>Reportes Disponibles</h3>
+                    <div class="reports-grid">
+                        <div class="report-card">
+                            <h4>Estado de Resultados</h4>
+                            <p>Ingresos vs gastos del período</p>
+                            <button class="btn btn-small" onclick="generateReport('income-statement')">Generar</button>
+                        </div>
+                        <div class="report-card">
+                            <h4>Flujo de Caja</h4>
+                            <p>Movimientos de efectivo</p>
+                            <button class="btn btn-small" onclick="generateReport('cash-flow')">Generar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Capacitación Module -->
+            <div id="capacitacion" class="module">
+                <div class="module-header">
+                    <h2>Capacitación y Tutoriales</h2>
+                    <p>Recursos educativos para mejorar tu gestión financiera</p>
+                </div>
+
+                <div class="tutorials-grid">
+                    <div class="tutorial-card">
+                        <div class="tutorial-icon">
+                            <i class="fas fa-play-circle"></i>
+                        </div>
+                        <h3>Registrar Ventas</h3>
+                        <p>Aprende cómo registrar correctamente tus ventas diarias</p>
+                        <button class="btn btn-primary">Ver Tutorial</button>
+                    </div>
+
+                    <div class="tutorial-card">
+                        <div class="tutorial-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h3>Optimizar Inventario</h3>
+                        <p>Estrategias para mantener un inventario eficiente</p>
+                        <button class="btn btn-primary">Ver Tutorial</button>
+                    </div>
+
+                    <div class="tutorial-card">
+                        <div class="tutorial-icon">
+                            <i class="fas fa-file-invoice"></i>
+                        </div>
+                        <h3>Facturación Básica</h3>
+                        <p>Guía paso a paso para emitir facturas</p>
+                        <button class="btn btn-primary">Ver Tutorial</button>
+                    </div>
+
+                    <div class="tutorial-card">
+                        <div class="tutorial-icon">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <h3>Educación Financiera</h3>
+                        <p>Conceptos básicos de contabilidad y finanzas</p>
+                        <button class="btn btn-primary">Ver Tutorial</button>
+                    </div>
+                </div>
+
+                <div class="tips-section">
+                    <h3>Tips Rápidos</h3>
+                    <div class="tips-grid">
+                        <div class="tip-card">
+                            <i class="fas fa-lightbulb"></i>
+                            <p>Registra todas tus transacciones diariamente</p>
+                        </div>
+                        <div class="tip-card">
+                            <i class="fas fa-lightbulb"></i>
+                            <p>Revisa tu inventario semanalmente</p>
+                        </div>
+                        <div class="tip-card">
+                            <i class="fas fa-lightbulb"></i>
+                            <p>Mantén separadas las finanzas personales y del negocio</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="incomeModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Registrar Ingreso</h2>
+            <form id="incomeForm">
+                <div class="form-group">
+                    <label for="incomeDescription">Descripción:</label>
+                    <input type="text" id="incomeDescription" required>
+                </div>
+                <div class="form-group">
+                    <label for="incomeAmount">Monto:</label>
+                    <input type="number" id="incomeAmount" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="incomeDate">Fecha:</label>
+                    <input type="date" id="incomeDate" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Registrar</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="expenseModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Registrar Gasto</h2>
+            <form id="expenseForm">
+                <div class="form-group">
+                    <label for="expenseDescription">Descripción:</label>
+                    <input type="text" id="expenseDescription" required>
+                </div>
+                <div class="form-group">
+                    <label for="expenseAmount">Monto:</label>
+                    <input type="number" id="expenseAmount" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="expenseDate">Fecha:</label>
+                    <input type="date" id="expenseDate" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Registrar</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Nuevo Producto</h2>
+            <form id="productForm">
+                <div class="form-group">
+                    <label for="productName">Nombre del Producto:</label>
+                    <input type="text" id="productName" required>
+                </div>
+                <div class="form-group">
+                    <label for="productStock">Stock Inicial:</label>
+                    <input type="number" id="productStock" required>
+                </div>
+                <div class="form-group">
+                    <label for="productPurchasePrice">Precio de Compra:</label>
+                    <input type="number" id="productPurchasePrice" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="productSalePrice">Precio de Venta:</label>
+                    <input type="number" id="productSalePrice" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="productMinStock">Stock Mínimo:</label>
+                    <input type="number" id="productMinStock" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Agregar Producto</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="saleModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Registrar Venta</h2>
+            <form id="saleForm">
+                <div class="form-group">
+                    <label for="saleProduct">Producto:</label>
+                    <select id="saleProduct" required>
+                        <option value="">Seleccionar producto</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="saleQuantity">Cantidad:</label>
+                    <input type="number" id="saleQuantity" required>
+                </div>
+                <div class="form-group">
+                    <label for="saleDate">Fecha:</label>
+                    <input type="date" id="saleDate" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Registrar Venta</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="invoiceModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Generar Factura/Ticket</h2>
+            <form id="invoiceForm">
+                <div class="form-group">
+                    <label for="invoiceClient">Cliente:</label>
+                    <input type="text" id="invoiceClient" required>
+                </div>
+                <div class="form-group">
+                    <label for="invoiceAmount">Monto Total:</label>
+                    <input type="number" id="invoiceAmount" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="invoiceDescription">Descripción:</label>
+                    <textarea id="invoiceDescription" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="invoiceDate">Fecha:</label>
+                    <input type="date" id="invoiceDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="invoiceType">Tipo:</label>
+                    <select id="invoiceType" required>
+                        <option value="ticket">Ticket</option>
+                        <option value="factura">Factura</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Generar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Ticket/Invoice Display Modal -->
+    <div id="ticketDisplayModal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <span class="close">&times;</span>
+            <div id="ticketContent">
+                <!-- Ticket content will be generated here -->
+            </div>
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn btn-primary" onclick="printTicket()">
+                    <i class="fas fa-print"></i> Imprimir
+                </button>
+                <button class="btn btn-secondary" onclick="closeModal('ticketDisplayModal')">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
